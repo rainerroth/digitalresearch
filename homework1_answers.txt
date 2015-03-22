@@ -1,0 +1,175 @@
+1. When was 'Jerry Maguire' released? 
+
+ssqlite> SELECT released FROM movies WHERE title = "Jerry Maguire";
+2000
+
+2. When was Kevin Bacon born?
+
+sqlite> SELECT born FROM people WHERE name = "Kevin Bacon";
+1958
+ 
+3. What is the tagline of 'The Matrix Reloaded'?
+
+sqlite> SELECT tagline FROM movies WHERE title = "The Matrix Reloaded";
+Free your mind
+
+4. Which movies have reviews?
+
+sqlite> SELECT * from reviews;
+1|17|131|Pretty funny at times|62
+2|22|132|An amazing journey|95
+3|17|132|Silly, but fun|65
+4|20|132|Dark, but compelling|85
+5|19|132|Slapstick redeemed only by the Robin Williams and Gene Hackman's stellar performances|45
+6|23|132|A solid romp|68
+7|7|132|You had me at Jerry|92
+8|17|133|The coolest football movie ever|100
+9|23|133|Fun, but a little far fetched|65
+
+I think this one is closer to the answer, but I am stuck...
+
+SELECT reviews.movie, reviews.summary, movies.title; FROM reviews JOIN reviews.summary ON title.movie = movies.id;
+Error: no such column: reviews.movie
+
+
+
+5. What roles were acted in 'Unforgiven'?
+
+sqlite> SELECT roles.role, movies.title FROM roles JOIN movies ON roles.movie = movies.id AND title like "%unforgiven";
+Little Bill Daggett|Unforgiven
+English Bob|Unforgiven
+Bill Munny|Unforgiven
+sqlite> 
+
+6. What roles were acted in 'Cloud Atlas'?
+
+sqlite> SELECT roles.role, movies.title FROM roles JOIN movies ON roles.movie = movies.id AND title like "%atlas";
+Bill Smoke|Cloud Atlas
+Haskell Moore|Cloud Atlas
+Tadeusz Kesselring|Cloud Atlas
+Nurse Noakes|Cloud Atlas
+Boardman Mephi|Cloud Atlas
+Old Georgie|Cloud Atlas
+Zachry|Cloud Atlas
+Dr. Henry Goose|Cloud Atlas
+Isaac Sachs|Cloud Atlas
+Dermot Hoggins|Cloud Atlas
+Luisa Rey|Cloud Atlas
+Jocasta Ayrs|Cloud Atlas
+Ovid|Cloud Atlas
+Meronym|Cloud Atlas
+Vyvyan Ayrs|Cloud Atlas
+Captain Molyneux|Cloud Atlas
+Timothy Cavendish|Cloud Atlas
+
+7. How many different people acted in 'Cloud Atlas'? (Hint: if you say SELECT DISTINCT instead of SELECT, all repeated rows will be removed!)
+
+sqlite> SELECT people.name, roles.role, movies.title FROM people JOIN roles ON people.id = roles.actor JOIN movies ON movies.id = roles.movie WHERE movies.title like "%atlas";
+Hugo Weaving|Bill Smoke|Cloud Atlas
+Hugo Weaving|Haskell Moore|Cloud Atlas
+Hugo Weaving|Tadeusz Kesselring|Cloud Atlas
+Hugo Weaving|Nurse Noakes|Cloud Atlas
+Hugo Weaving|Boardman Mephi|Cloud Atlas
+Hugo Weaving|Old Georgie|Cloud Atlas
+Tom Hanks|Zachry|Cloud Atlas
+Tom Hanks|Dr. Henry Goose|Cloud Atlas
+Tom Hanks|Isaac Sachs|Cloud Atlas
+Tom Hanks|Dermot Hoggins|Cloud Atlas
+Halle Berry|Luisa Rey|Cloud Atlas
+Halle Berry|Jocasta Ayrs|Cloud Atlas
+Halle Berry|Ovid|Cloud Atlas
+Halle Berry|Meronym|Cloud Atlas
+Jim Broadbent|Vyvyan Ayrs|Cloud Atlas
+Jim Broadbent|Captain Molyneux|Cloud Atlas
+Jim Broadbent|Timothy Cavendish|Cloud Atlas
+
+
+sqlite> SELECT DISTINCT people.name, roles.role, movies.title FROM people JOIN roles ON people.id = roles.actor JOIN movies ON movies.id = roles.movie WHERE movies.title like "%atlas";
+Hugo Weaving|Bill Smoke|Cloud Atlas
+Hugo Weaving|Haskell Moore|Cloud Atlas
+Hugo Weaving|Tadeusz Kesselring|Cloud Atlas
+Hugo Weaving|Nurse Noakes|Cloud Atlas
+Hugo Weaving|Boardman Mephi|Cloud Atlas
+Hugo Weaving|Old Georgie|Cloud Atlas
+Tom Hanks|Zachry|Cloud Atlas
+Tom Hanks|Dr. Henry Goose|Cloud Atlas
+Tom Hanks|Isaac Sachs|Cloud Atlas
+Tom Hanks|Dermot Hoggins|Cloud Atlas
+Halle Berry|Luisa Rey|Cloud Atlas
+Halle Berry|Jocasta Ayrs|Cloud Atlas
+Halle Berry|Ovid|Cloud Atlas
+Halle Berry|Meronym|Cloud Atlas
+Jim Broadbent|Vyvyan Ayrs|Cloud Atlas
+Jim Broadbent|Captain Molyneux|Cloud Atlas
+Jim Broadbent|Timothy Cavendish|Cloud Atlas
+
+
+8. Who acted in movies released in 1995?
+
+sqlite> SELECT people.name, roles.role, movies.title FROM people JOIN roles ON people.id = roles.actor JOIN movies ON movies.id = roles.movie WHERE movies.released = 1995;
+Keanu Reeves|Johnny Mnemonic|Johnny Mnemonic
+Kevin Bacon|Jack Swigert|Apollo 13
+Kiefer Sutherland|Ace Merrill|Stand By Me
+Jerry O'Connell|Vern Tessio|Stand By Me
+River Phoenix|Chris Chambers|Stand By Me
+Corey Feldman|Teddy Duchamp|Stand By Me
+Wil Wheaton|Gordie Lachance|Stand By Me
+John Cusack|Denny Lachance|Stand By Me
+Marshall Bell|Mr. Lachance|Stand By Me
+Tom Hanks|Jim Lovell|Apollo 13
+Takeshi Kitano|Takahashi|Johnny Mnemonic
+Dina Meyer|Jane|Johnny Mnemonic
+Ice-T|J-Bone|Johnny Mnemonic
+Gary Sinise|Ken Mattingly|Apollo 13
+Ed Harris|Gene Kranz|Apollo 13
+Bill Paxton|Fred Haise|Apollo 13
+
+9. Who reviewed 'Jerry Maguire'?
+
+
+
+wer welchen film nach 1999 regie:
+
+SELECT people.name, movies.title FROM people
+JOIN directed ON people.id = directed.director 
+JOIN movies ON movies.id = directed.movie 
+WHERE movies.released > 1999;
+
+
+
+SELECT movie FROM reviews;
+----------------------------------
+
+CREATE TABLE people (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT NOT NULL,
+	born DATE );
+CREATE TABLE movies (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT NOT NULL,
+	released DATE NOT NULL,
+	tagline TEXT );
+CREATE TABLE roles (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	role TEXT NOT NULL,
+	movie INTEGER NOT NULL REFERENCES movies(id),
+	actor INTEGER NOT NULL REFERENCES people(id) );
+CREATE TABLE reviews (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	movie INTEGER NOT NULL REFERENCES movies(id),
+	author INTEGER NOT NULL REFERENCES people(id),
+	summary TEXT NOT NULL,
+	rating INTEGER NOT NULL );
+CREATE TABLE wrote (
+	movie INTEGER NOT NULL REFERENCES movies(id),
+	author INTEGER NOT NULL REFERENCES people(id) );
+CREATE TABLE directed (
+	movie INTEGER NOT NULL REFERENCES movies(id),
+	director INTEGER NOT NULL REFERENCES people(id) );
+CREATE TABLE produced (
+	movie INTEGER NOT NULL REFERENCES movies(id),
+	producer INTEGER NOT NULL REFERENCES people(id) );
+	
+	
+
+	
