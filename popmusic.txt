@@ -1,0 +1,39 @@
+# 3. 19th century pop music
+
+people
+* id integer
+- name text
+- born date
+
+# all the musicians, composers and reviwers
+
+music
+* id integer
+- title text
+- written date
+
+# the information about the music
+
+performed
+* id integer
+- time date
+- place text
+- musician => people.id
+
+# performed when where and by whom
+
+reviews
+* id integer
+- performance => music.id
+- author => people.id
+- summary text
+
+# who reviewd which performance when and how
+
+
+groups
+- band => people.id
+
+# in case there is not one musician playing but a band
+
+
