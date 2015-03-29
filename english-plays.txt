@@ -1,0 +1,29 @@
+# 5 sixteenth-century English plays
+
+people
+* id integer
+- name text
+- born date
+
+plays
+* id integer
+- title text
+- written date
+- author => people.id
+- genre text
+
+acts
+- act integer
+- play => plays.id
+
+scenes
+- scene text
+- play => plays.id
+
+lines
+- line text
+- play => plays.id
+
+characters
+- role text # the text of the specific character
+- character => people.id
