@@ -1,0 +1,29 @@
+# 2 teaching a class
+
+people
+* id integer
+- name text
+- born date
+
+# we need the students names
+
+attendance 
+* id integer 
+- class date
+- student => people.id
+
+# 1 = attended 0 = missed and we need to know the date of the class and can link that with the students name
+
+scores
+* id integer
+- test integer
+- homework integer
+- student => people.id
+
+# we need a table for the tests and the homework each and the names of the students
+
+
+divisions
+- groups => people.id
+
+# to know the groups we can get the students name from people
