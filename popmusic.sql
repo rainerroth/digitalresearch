@@ -1,0 +1,30 @@
+CREATE TABLE people (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT,
+	born DATE
+);
+
+CREATE TABLE music (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	title TEXT,
+	written DATE
+);
+
+CREATE TABLE performed (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	time DATE,
+	place TEXT,
+	musician INTEGER REFERENCES people(id)
+);
+
+CREATE TABLE reviews (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	performance INTEGER REFERENCES music(id),
+	author INTEGER REFERENCES people(id),
+	summary TEXT
+);
+
+CREATE TABLE groups (
+	band INTEGER REFERENCES people(id)
+);
+
