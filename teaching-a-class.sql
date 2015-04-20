@@ -1,0 +1,23 @@
+CREATE TABLE people (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	name TEXT,
+	born DATE
+);
+
+CREATE TABLE attendance (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	class DATE,
+	student INTEGER REFERENCES people(id)
+);
+
+CREATE TABLE scores (
+	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	test INTEGER,
+	homework INTEGER,
+	student INTEGER REFERENCES people(id)
+);
+
+CREATE TABLE divisions (
+	groups INTEGER REFERENCES people(id)
+);
+
